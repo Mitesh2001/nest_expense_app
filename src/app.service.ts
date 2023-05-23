@@ -1,5 +1,5 @@
 import { ReportType, data } from "./Data";
-import { Injectable } from '@nestjs/common';
+import { Injectable, } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 
 interface Report { 

@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseEnumPipe, ParseUUIDPipe, Post, Put } from "@nestjs/common";
 import { ReportType } from "./Data";
 import { AppService } from './app.service';
+import { CreateReportDto } from "./dtos/report.dto";
 
 @Controller('report/:type')
 
@@ -11,24 +12,20 @@ export class AppController {
   ) {}
 
   @Get()
-  getAllReports(@Param('type') type : string) {    
+  getAllReports(@Param('type',new ParseEnumPipe(ReportType)) type : string) {    
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENCE
     return this.appService.getAllReports(reportType)
   }
 
   @Get(':id')
-  getReportById (@Param('id',ParseUUIDPipe) id :string, @Param('type') type : string ) {
-    console.log(id, typeof id);
+  getReportById (@Param('id',ParseUUIDPipe) id :string, @Param('type', new ParseEnumPipe(ReportType)) type : string ) {
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENCE;
     return this.appService.getReportById(reportType,id)
   }
 
   @Post()
   createReport(
-    @Body() {amount, source} : {
-      amount : number;
-      source : string
-    },
+    @Body() {amount, source} : CreateReportDto,
     @Param('type') type : string
   ) {
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENCE;
@@ -38,7 +35,7 @@ export class AppController {
   @Put(':id')
   updateReport(
     @Param('id',ParseUUIDPipe) id : string,
-    @Param('type') type : string,
+    @Param('type',new ParseEnumPipe(ReportType)) type : string,
     @Body() body : {
       amount : number;
       source : string
@@ -52,7 +49,7 @@ export class AppController {
   @Delete(':id')
   deleteReport(
     @Param('id',ParseUUIDPipe) id : string,
-    @Param('type') type : string,
+    @Param('type',new ParseEnumPipe(ReportType)) type : string,
   ){
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENCE;
     return this.appService.deleteReport(reportType,id);

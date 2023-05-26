@@ -10,8 +10,8 @@ export interface Data {
 }
 
 export enum ReportType  {
-    INCOME = "Income",
-    EXPENCE = "Expense"
+    INCOME = "income",
+    EXPENCE = "expense"
 }
 
 export const data : Data = {
